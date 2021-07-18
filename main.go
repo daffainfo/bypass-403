@@ -29,7 +29,7 @@ var (
 )
 
 const (
-	version string = "v1.0.2"
+	version string = "v1.1.0"
 	red     string = "\033[31m"
 	green   string = "\033[32m"
 	white   string = "\033[97m"
