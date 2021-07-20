@@ -2,7 +2,6 @@
 ## Go script for bypassing 403 forbidden
 ![](https://img.shields.io/github/license/daffainfo/bypass-403)
 ![](https://img.shields.io/github/issues/daffainfo/bypass-403)
-[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/tegal1337/CiLocks/issues)
 ![](https://img.shields.io/github/forks/daffainfo/bypass-403)
 ![](https://img.shields.io/github/stars/daffainfo/bypass-403)
 ![](https://img.shields.io/github/last-commit/daffainfo/bypass-403)
