@@ -26,10 +26,14 @@ var (
 		"X-ProxyUser-Ip",
 		"X-Remote-Addr",
 	}
+	Red   = Color("\033[1;31m%s\033[0m")
+	Green = Color("\033[1;32m%s\033[0m")
+	Blue  = Color("\033[1;34m%s\033[0m")
+	Cyan  = Color("\033[1;36m%s\033[0m")
 )
 
 const (
-	version string = "v1.1.0"
+	version string = "v1.1.1"
 	red     string = "\033[31m"
 	green   string = "\033[32m"
 	white   string = "\033[97m"
@@ -37,8 +41,16 @@ const (
 	headerValue string = "127.0.0.1"
 )
 
+func Color(colorString string) func(...interface{}) string {
+	sprint := func(args ...interface{}) string {
+		return fmt.Sprintf(colorString,
+			fmt.Sprint(args...))
+	}
+	return sprint
+}
+
 func showBanner() {
-	fmt.Printf("%s %s %s %s %s %s %s %s %s %s %s\n", green,
+	fmt.Println(Green(
 		" _  _    ___ ____        ____\n",
 		"| || |  / _ \\___ \\      |  _ \\\n",
 		"| || |_| | | |__) |_____| |_) |_   _ _ __   __ _ ___ ___  ___ _ __\n",
@@ -47,7 +59,7 @@ func showBanner() {
 		"   |_|  \\___/____/      |____/ \\__, | .__/ \\__,_|___/___/\\___|_|\n",
 		"                                __/ | |\n",
 		"                               |___/|_|                          ",
-		version, white)
+		version))
 }
 
 func getValidDomain(domain string) string {
@@ -96,16 +108,16 @@ func penetrateEndpoint(wg *sync.WaitGroup, url string, header ...string) {
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal(Red(err))
 	}
 	defer resp.Body.Close()
 
-	color := green
 	if resp.StatusCode != 200 {
-		color = red
+		log.Println(Red(h, " ", url, " (", resp.StatusCode, " ", http.StatusText(resp.StatusCode), ")"))
+	} else {
+		log.Println(Green(h, " ", url, " (", resp.StatusCode, " ", http.StatusText(resp.StatusCode), ")"))
 	}
 
-	log.Println(color, h, url, resp.StatusCode, http.StatusText(resp.StatusCode), white)
 }
 
 func main() {
@@ -125,10 +137,10 @@ func main() {
 
 	showBanner()
 
-	fmt.Println("\nDomain:", validDomain)
-	fmt.Println("Path:", validPath)
+	fmt.Println(Blue("\nDomain:", validDomain))
+	fmt.Println(Blue("Path:", validPath))
 
-	fmt.Println("\nNormal Request")
+	fmt.Println(Cyan("\nNormal Request"))
 
 	var wg sync.WaitGroup
 	wg.Add(len(endpoints))
@@ -139,7 +151,7 @@ func main() {
 
 	wg.Wait()
 
-	fmt.Println("\nRequest with Headers")
+	fmt.Println(Cyan("\nRequest with Headers"))
 	wg.Add(len(headerPayloads))
 
 	for _, h := range headerPayloads {
