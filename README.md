@@ -6,12 +6,8 @@
 ![](https://img.shields.io/github/stars/daffainfo/bypass-403)
 ![](https://img.shields.io/github/last-commit/daffainfo/bypass-403)
 
-## Update V1.1.0 🚀 
-- Close response body of every request in order to avoid leak
-- Add timeout to avoid slow connection request keep alive (1min)
-- Add goroutine to improve bulk requests
-- Add Makefile to linting code
-- Validate given domain
+## Update V1.1.1 🚀 
+- Changing some color
 
 ## Video 🎥
 
